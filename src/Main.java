@@ -1,4 +1,5 @@
 import java.util.*;
+// This is an example of the strategy pattern
 
 class Course{
     private String _cnum;
