@@ -31,40 +31,15 @@ class AllStudents{
         _students.addItem(new Student(id));
     }
     public boolean isStudent(String id){
-        int i=0;
-        boolean found = false;
-        while (i<_students.size() && !found){
-            if (_students.getItem(i).getID().equals(id))
-                found = true;
-            else
-                i++;
-        }
-        return found;
+        return _students.isItem(id, new StudentSearch());
     }
     public int findStudent(String id){
-        int i=0;
-        boolean found = false;
-        while (i<_students.size() && !found){
-            if (_students.get(i).getID().equals(id))
-                found = true;
-            else
-                i++;
-        }
-        if (!found)
-            return -1;
-        return i;
+        return _students.findItem(id, new StudentSearch());
     }
     public void removeStudent(String id){
-        int i=0;
-        boolean found = false;
-        while (i<_students.size() && !found){
-            if (_students.get(i).getID().equals(id)) {
-                _students.remove(i);
-                found = true;
-            }
-            else
-                i++;
-        }
+        int i = _students.findItem(id, new StudentSearch());
+        _students.removeItem(i);
+
     }
     public String toString(){
         String s = "Students:\n";
@@ -75,7 +50,7 @@ class AllStudents{
 }
 interface SearchBehavior<T, S>{
     // T is the object S is the value
-    boolean search(T obj, S v);
+    boolean search(T obj, S v); // method within an interface
 
 }
 class StudentSearch implements SearchBehavior<Student , String>{
@@ -90,13 +65,18 @@ class CourseSearch implements SearchBehavior<Course , String>{
         return obj.getNumber().equals(v);
     }
 }
-class AllItems<T>{
+class AllItems<T>{ // "GENERIC" not required for strategy pattern
     private ArrayList<T>_items;
     public AllItems(){
         _items = new ArrayList<T>();
     }
     public void addItem(T t){
         _items.add(t);
+    }
+    public void removeItem(int i){
+        if(i >= 0 && i < _items.size()){
+            _items.remove(i);
+        }
     }
     public <S> boolean isItem(S v, SearchBehavior<T , S> sb){ // BREAKING IN A LOOP, NORMALLY NOT GOOD
         // Only accepted because it is very short
@@ -133,40 +113,13 @@ class AllCourses{
         _courses.addItem(new Course(cnum, c));
     }
     public boolean isCourse(String cnum){
-        int i=0;
-        boolean found = false;
-        while (i<_courses.size() && !found){
-            if (_courses.getItem(i).getNumber().equals(cnum))
-                found = true;
-            else
-                i++;
-        }
-        return found;
+        return _courses.isItem(cnum, new CourseSearch());
     }
     public int findCourse(String cnum){
-        int i=0;
-        boolean found = false;
-        while (i<_courses.size() && !found){
-            if (_courses.getItem(i).getNumber().equals(cnum))
-                found = true;
-            else
-                i++;
-        }
-        if (!found)
-            return -1;
-        return i;
+        return _courses.findItem(cnum , new CourseSearch());
     }
     public void removeCourse(String cnum){
-        int i=0;
-        boolean found = false;
-        while (i<_courses.size() && !found){
-            if (_courses.getItem(i).getNumber().equals(cnum)) {
-                _courses.remove(i);
-                found = true;
-            }
-            else
-                i++;
-        }
+        int i = _courses.findItem(cnum , new CourseSearch());
     }
     public String toString(){
         String s = "Courses:\n";
